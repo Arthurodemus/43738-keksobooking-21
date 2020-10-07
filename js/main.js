@@ -28,7 +28,7 @@ function getData(countOfObjects) {
 
   let someData = [];
   for (let i = 0; i < countOfObjects; i++) {
-    data.push({
+    someData.push({
       "author": {
         "avatar": `img/avatars/user0${i + 1}.png`
       },
