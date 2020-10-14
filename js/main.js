@@ -16,6 +16,13 @@ const TITLES = [`first`, `twice`, `third`, `quatro`];
 const DESCRIPTION = [`good rooms`, `bad rooms`, `nice`, `fine`, `not good`];
 const MIN_Y_LOCATION = 130;
 const MAX_Y_LOCATION = 630;
+const ROOMS_CAPACITY = {
+  1: [`1`],
+  2: [`1`, `2`],
+  3: [`1`, `2`, `3`],
+  100: [`0`]
+};
+let pageActive = false;
 
 function createPin(pinsData) {
   const fragment = document.createDocumentFragment();
@@ -79,6 +86,91 @@ function generatePin(pinObject) {
   return myTemplate;
 }
 
+function disableFormFields(fields, switcher) {
+  for (let item of fields) {
+    item.disabled = switcher;
+  }
+}
+
+function showMap() {
+  const map = document.querySelector(`.map`);
+  map.classList.remove(`map--faded`);
+  const adForm = document.querySelector(`.ad-form`);
+  adForm.classList.remove(`ad-form--disabled`);
+}
+
+function getCoordCenterOfBlock(nameOfBlock) {
+  const blockWidth = nameOfBlock.offsetWidth;
+  const blockHeight = nameOfBlock.offsetHeight;
+  const widthCenter = nameOfBlock.offsetLeft + blockWidth / 2;
+  const heightCenter = nameOfBlock.offsetTop + blockHeight / 2;
+  return {x: widthCenter, y: heightCenter};
+}
+
+function getCoordOfPointer(nameOfBlock) {
+  const blockWidth = nameOfBlock.offsetWidth;
+  const blockHeight = nameOfBlock.offsetHeight;
+  const widthCenter = nameOfBlock.offsetLeft + blockWidth / 2;
+  const heightCenter = nameOfBlock.offsetTop + blockHeight;
+  return {x: widthCenter, y: heightCenter};
+}
+
+function pasteAdress(adress, mainPinCenter) {
+  adress.value = `${mainPinCenter.x}, ${mainPinCenter.y}`;
+}
+function activatePage() {
+  showMap();
+  disableFormFields(fieldset, false);
+  const mainPinPointer = getCoordOfPointer(mapPinMain);
+  pasteAdress(inputAdress, mainPinPointer);
+  pageActive = true;
+}
+
+function checkRooms() {
+  const roomsCapacity = document.querySelector(`#capacity`);
+  const roomsCount = document.querySelector(`#room_number`);
+  if (ROOMS_CAPACITY[roomsCount.value].includes(roomsCapacity.value)) {
+    roomsCapacity.setCustomValidity(``);
+  } else {
+    roomsCapacity.setCustomValidity(`Количество комнат не соответствует количеству гостей.`);
+  }
+}
+function deactivatePage() {
+  const map = document.querySelector(`.map`);
+  map.classList.add(`map--faded`);
+  const adForm = document.querySelector(`.ad-form`);
+  adForm.classList.add(`ad-form--disabled`);
+  const mainPinCenter = getCoordCenterOfBlock(mapPinMain);
+  pasteAdress(inputAdress, mainPinCenter);
+  pageActive = false;
+}
 
 const pinsData = getPinsData(COUNT_OF_PINS);
 createPin(pinsData);
+
+deactivatePage();
+
+const adForm = document.querySelector(`.ad-form`);
+const fieldset = adForm.querySelectorAll(`fieldset`);
+disableFormFields(fieldset, true);
+
+const inputAdress = document.querySelector(`#address`);
+const mapPinMain = document.querySelector(`.map__pin--main`);
+
+mapPinMain.addEventListener(`keydown`, function (evt) {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+});
+mapPinMain.addEventListener(`mousedown`, function () {
+  if (pageActive === false) {
+    activatePage();
+  }
+});
+
+const submitButton = document.querySelector(`.ad-form__submit`);
+submitButton.addEventListener(`click`, function () {
+  checkRooms();
+});
+
+
