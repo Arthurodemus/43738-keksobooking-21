@@ -138,8 +138,9 @@ function checkRooms() {
 function deactivatePage() {
   const map = document.querySelector(`.map`);
   map.classList.add(`map--faded`);
-  const adForm = document.querySelector(`.ad-form`);
+  disableFormFields(fieldset, true);
   adForm.classList.add(`ad-form--disabled`);
+
   const mainPinCenter = getCoordCenterOfBlock(mapPinMain);
   pasteAdress(inputAdress, mainPinCenter);
   pageActive = false;
@@ -148,22 +149,20 @@ function deactivatePage() {
 const pinsData = getPinsData(COUNT_OF_PINS);
 createPin(pinsData);
 
-deactivatePage();
-
-const adForm = document.querySelector(`.ad-form`);
-const fieldset = adForm.querySelectorAll(`fieldset`);
-disableFormFields(fieldset, true);
-
 const inputAdress = document.querySelector(`#address`);
 const mapPinMain = document.querySelector(`.map__pin--main`);
+const adForm = document.querySelector(`.ad-form`);
+const fieldset = adForm.querySelectorAll(`fieldset`);
+
+deactivatePage();
 
 mapPinMain.addEventListener(`keydown`, function (evt) {
   if (evt.key === `Enter`) {
     activatePage();
   }
 });
-mapPinMain.addEventListener(`mousedown`, function () {
-  if (pageActive === false) {
+mapPinMain.addEventListener(`mousedown`, function (evt) {
+  if (pageActive === false && evt.which === 1) {
     activatePage();
   }
 });
