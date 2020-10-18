@@ -16,13 +16,7 @@ const TITLES = [`first`, `twice`, `third`, `quatro`];
 const DESCRIPTION = [`good rooms`, `bad rooms`, `nice`, `fine`, `not good`];
 const MIN_Y_LOCATION = 130;
 const MAX_Y_LOCATION = 630;
-const ROOMS_CAPACITY = {
-  1: [`1`],
-  2: [`1`, `2`],
-  3: [`1`, `2`, `3`],
-  100: [`0`]
-};
-let pageActive = false;
+const MAIN_MOUSE_BUTTON = 0;
 
 function createPin(pinsData) {
   const fragment = document.createDocumentFragment();
@@ -30,7 +24,6 @@ function createPin(pinsData) {
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(fragment);
 }
-
 function getRandomItem(array) {
   return array[Math.round(Math.random() * (array.length - 1))];
 }
@@ -75,7 +68,6 @@ function getPinsData(countOfObjects) {
   }
   return pinsData;
 }
-
 function generatePin(pinObject) {
   const templateOrigin = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   const myTemplate = templateOrigin.cloneNode(true);
@@ -86,83 +78,91 @@ function generatePin(pinObject) {
   return myTemplate;
 }
 
-function disableFormFields(fields, switcher) {
-  for (let item of fields) {
+
+function disableElements(elementsList, switcher) {
+  for (let item of elementsList) {
     item.disabled = switcher;
   }
 }
-
 function showMap() {
-  const map = document.querySelector(`.map`);
   map.classList.remove(`map--faded`);
-  const adForm = document.querySelector(`.ad-form`);
   adForm.classList.remove(`ad-form--disabled`);
 }
-
-function getCoordCenterOfBlock(nameOfBlock) {
-  const blockWidth = nameOfBlock.offsetWidth;
-  const blockHeight = nameOfBlock.offsetHeight;
-  const widthCenter = nameOfBlock.offsetLeft + blockWidth / 2;
-  const heightCenter = nameOfBlock.offsetTop + blockHeight / 2;
+function getCoordCenterOfBlock(element) {
+  const blockWidth = element.offsetWidth;
+  const blockHeight = element.offsetHeight;
+  const widthCenter = element.offsetLeft + blockWidth / 2;
+  const heightCenter = element.offsetTop + blockHeight / 2;
   return {x: widthCenter, y: heightCenter};
 }
-
-function getCoordOfPointer(nameOfBlock) {
-  const blockWidth = nameOfBlock.offsetWidth;
-  const blockHeight = nameOfBlock.offsetHeight;
-  const widthCenter = nameOfBlock.offsetLeft + blockWidth / 2;
-  const heightCenter = nameOfBlock.offsetTop + blockHeight;
+function getCoordOfPointer(element) {
+  const blockWidth = element.offsetWidth;
+  const blockHeight = element.offsetHeight;
+  const widthCenter = element.offsetLeft + blockWidth / 2;
+  const heightCenter = element.offsetTop + blockHeight;
   return {x: widthCenter, y: heightCenter};
 }
-
 function pasteAdress(adress, mainPinCenter) {
   adress.value = `${mainPinCenter.x}, ${mainPinCenter.y}`;
 }
 function activatePage() {
   showMap();
-  disableFormFields(fieldset, false);
+  disableElements(adFormElements, false);
+  disableElements(mapFilterElements, false);
   const mainPinPointer = getCoordOfPointer(mapPinMain);
   pasteAdress(inputAdress, mainPinPointer);
-  pageActive = true;
 }
-
 function checkRooms() {
-  const roomsCapacity = document.querySelector(`#capacity`);
-  const roomsCount = document.querySelector(`#room_number`);
-  if (ROOMS_CAPACITY[roomsCount.value].includes(roomsCapacity.value)) {
-    roomsCapacity.setCustomValidity(``);
-  } else {
-    roomsCapacity.setCustomValidity(`Количество комнат не соответствует количеству гостей.`);
+  const roomsCapacityElement = document.querySelector(`#capacity`);
+  const roomsCountElement = document.querySelector(`#room_number`);
+  const roomsCount = Number(roomsCountElement.value);
+  const roomsCapacity = Number(roomsCapacityElement.value);
+  if (roomsCount === 100 && roomsCapacity !== 0) {
+    roomsCapacityElement.setCustomValidity(`Количество комнат не соответствует количеству гостей.`);
+    return;
   }
+  if (roomsCapacity > roomsCount) {
+    roomsCapacityElement.setCustomValidity(`Количество комнат не соответствует количеству гостей.`);
+    return;
+  }
+  roomsCapacityElement.setCustomValidity(``);
 }
 function deactivatePage() {
-  const map = document.querySelector(`.map`);
   map.classList.add(`map--faded`);
-  disableFormFields(fieldset, true);
+  disableElements(adFormElements, true);
+  disableElements(mapFilterElements, true);
   adForm.classList.add(`ad-form--disabled`);
 
   const mainPinCenter = getCoordCenterOfBlock(mapPinMain);
   pasteAdress(inputAdress, mainPinCenter);
-  pageActive = false;
 }
+function isPageActive() {
+  if (map.classList.contains(`map--faded`)) {
+    return false;
+  }
+  return true;
+}
+
 
 const pinsData = getPinsData(COUNT_OF_PINS);
 createPin(pinsData);
 
+const map = document.querySelector(`.map`);
 const inputAdress = document.querySelector(`#address`);
 const mapPinMain = document.querySelector(`.map__pin--main`);
 const adForm = document.querySelector(`.ad-form`);
-const fieldset = adForm.querySelectorAll(`fieldset`);
-
+const adFormElements = adForm.childNodes;
+const mapFilter = document.querySelector(`.map__filters`);
+const mapFilterElements = mapFilter.childNodes;
 deactivatePage();
 
 mapPinMain.addEventListener(`keydown`, function (evt) {
-  if (evt.key === `Enter`) {
+  if (!isPageActive() && evt.key === `Enter`) {
     activatePage();
   }
 });
 mapPinMain.addEventListener(`mousedown`, function (evt) {
-  if (pageActive === false && evt.which === 1) {
+  if (!isPageActive() && evt.button === MAIN_MOUSE_BUTTON) {
     activatePage();
   }
 });
