@@ -1,6 +1,7 @@
 'use strict';
 const COUNT_OF_PINS = 8;
 const TYPES = [`palace`, `flat`, `house`, `bungalow`];
+const COMPLIANCE_TYPES = {flat: `квартира`, bungalow: `Бунгало`, house: `Дом`, palace: `Дворец`};
 const TIMES = [`12:00`, `13:00`, `14:00`];
 const FEATURES = [`wifi`, `dishwasher`, `parking`, `washer`, `elevator`, `conditioner`];
 const PHOTOS = [`http://o0.github.io/assets/images/tokyo/hotel1.jpg`, `http://o0.github.io/assets/images/tokyo/hotel2.jpg`, `http://o0.github.io/assets/images/tokyo/hotel3.jpg`];
@@ -21,6 +22,16 @@ const MAIN_MOUSE_BUTTON = 0;
 function createPin(pinsData) {
   const fragment = document.createDocumentFragment();
   pinsData.forEach((object) => fragment.appendChild(generatePin(object)));
+  const mapPins = document.querySelector(`.map__pins`);
+  mapPins.appendChild(fragment);
+}
+function createCard(pinsData) {
+  const fragment = document.createDocumentFragment();
+  // pinsData.forEach((object) => fragment.appendChild(generateCard(object)));
+  if (pinsData[0].offer.photos.length === 0 || pinsData[0].offer.description === `` || pinsData[0].offer.address === ``) {
+    return;
+  }
+  fragment.appendChild(generateCard(pinsData[0]));
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(fragment);
 }
@@ -77,8 +88,30 @@ function generatePin(pinObject) {
   myTemplate.style.top = `${pinObject.location.y}px`;
   return myTemplate;
 }
-
-
+function generateCard(cardItem) {
+  const templateOrigin = document.querySelector(`#card`).content.querySelector(`.map__card`);
+  const myTemplate = templateOrigin.cloneNode(true);
+  myTemplate.querySelector(`.popup__title`).textContent = cardItem.offer.title;
+  myTemplate.querySelector(`.popup__text--address`).textContent = cardItem.offer.address;
+  myTemplate.querySelector(`.popup__text--price`).textContent = `${cardItem.offer.price}₽/ночь`;
+  myTemplate.querySelector(`.popup__type`).textContent = COMPLIANCE_TYPES[cardItem.offer.type];
+  myTemplate.querySelector(`.popup__text--capacity`).textContent = `${cardItem.offer.rooms} комнаты для ${cardItem.offer.guests} гостей.`;
+  myTemplate.querySelector(`.popup__text--time`).textContent = `Заезд после ${cardItem.offer.checkin}, выезд до ${cardItem.offer.checkout}`;
+  myTemplate.querySelector(`.popup__features`).textContent = cardItem.offer.features;
+  myTemplate.querySelector(`.popup__description`).textContent = cardItem.offer.description;
+  addPhotoCard(myTemplate, cardItem);
+  myTemplate.querySelector(`.popup__photos img`).remove();
+  myTemplate.querySelector(`.popup__avatar`).src = cardItem.author.avatar;
+  return myTemplate;
+}
+function addPhotoCard(myTemplate, cardItem) {
+  const placeForPhoto = myTemplate.querySelector(`.popup__photos`);
+  cardItem.offer.photos.forEach(function (photoSrc) {
+    const photoCardTemplate = myTemplate.querySelector(`.popup__photos img`).cloneNode(true);
+    photoCardTemplate.src = photoSrc;
+    placeForPhoto.appendChild(photoCardTemplate);
+  });
+}
 function disableElements(elementsList, switcher) {
   for (let item of elementsList) {
     item.disabled = switcher;
@@ -146,6 +179,7 @@ function isPageActive() {
 
 const pinsData = getPinsData(COUNT_OF_PINS);
 createPin(pinsData);
+createCard(pinsData);
 
 const map = document.querySelector(`.map`);
 const inputAdress = document.querySelector(`#address`);
