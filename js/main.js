@@ -3,6 +3,7 @@
 function activatePage() {
   window.map.show();
   window.form.show();
+  window.form.validate();
   window.map.pastePinAdress();
 }
 function deactivatePage() {
@@ -16,7 +17,7 @@ function isPageActive() {
 
 deactivatePage();
 window.pins.create(window.data);
-window.card.create(window.data);
+window.card.create(window.data[0]);
 
 window.map.mainPin.addEventListener(`keydown`, function (evt) {
   if (!isPageActive()) {
