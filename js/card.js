@@ -2,7 +2,7 @@
 (function () {
   const COMPLIANCE_TYPES = {flat: `квартира`, bungalow: `Бунгало`, house: `Дом`, palace: `Дворец`};
 
-  function removeCard() {
+  const removeCard = () => {
     const mapCard = window.map.element.querySelector(`.map__card`);
     if (mapCard !== null) {
       const popupClose = mapCard.querySelector(`.popup__close`);
@@ -10,13 +10,11 @@
       popupClose.removeEventListener(`click`, removeCard);
       document.removeEventListener(`keydown`, cardEscHandler);
     }
-  }
+  };
 
-  function cardEscHandler(evt) {
-    window.util.isEscEvent(evt, removeCard);
-  }
+  const cardEscHandler = (evt) => window.util.isEscEvent(evt, removeCard);
 
-  function createCard(pinsData) {
+  const createCard = (pinsData) => {
     const fragment = document.createDocumentFragment();
     if (pinsData.offer.photos.length === 0 || pinsData.offer.description === `` || pinsData.offer.address === ``) {
       return;
@@ -24,9 +22,9 @@
     fragment.appendChild(generateCard(pinsData));
     const mapPins = document.querySelector(`.map__pins`);
     mapPins.appendChild(fragment);
-  }
+  };
 
-  function generateCard(cardItem) {
+  const generateCard = (cardItem) => {
     const templateOrigin = document.querySelector(`#card`).content.querySelector(`.map__card`);
     const myTemplate = templateOrigin.cloneNode(true);
     const popupClose = myTemplate.querySelector(`.popup__close`);
@@ -46,15 +44,15 @@
     document.addEventListener(`keydown`, cardEscHandler);
 
     return myTemplate;
-  }
-  function addPhotoCard(myTemplate, cardItem) {
+  };
+  const addPhotoCard = (myTemplate, cardItem) => {
     const placeForPhoto = myTemplate.querySelector(`.popup__photos`);
-    cardItem.offer.photos.forEach(function (photoSrc) {
+    cardItem.offer.photos.forEach((photoSrc) => {
       const photoCardTemplate = myTemplate.querySelector(`.popup__photos img`).cloneNode(true);
       photoCardTemplate.src = photoSrc;
       placeForPhoto.appendChild(photoCardTemplate);
     });
-  }
+  };
   window.card = {
     create: createCard,
     remove: removeCard

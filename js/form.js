@@ -10,22 +10,22 @@
   const mapFilter = document.querySelector(`.map__filters`);
   const mapFilterElements = mapFilter.childNodes;
 
-  function disableElements(elementsList, switcher) {
+  const disableElements = (elementsList, switcher) => {
     for (let item of elementsList) {
       item.disabled = switcher;
     }
-  }
-  function showForm() {
+  };
+  const showForm = () => {
     adForm.classList.remove(`ad-form--disabled`);
     disableElements(adFormElements, false);
     disableElements(mapFilterElements, false);
-  }
-  function hideForm() {
+  };
+  const hideForm = () => {
     disableElements(adFormElements, true);
     disableElements(mapFilterElements, true);
     adForm.classList.add(`ad-form--disabled`);
-  }
-  function validateForm() {
+  };
+  const validateForm = () => {
     const title = document.querySelector(`#title`);
     const price = document.querySelector(`#price`);
     const adress = document.querySelector(`#address`);
@@ -48,20 +48,20 @@
 
     adress.setAttribute(`readonly`, ``);
 
-    typeOfRoom.addEventListener(`change`, function () {
+    typeOfRoom.addEventListener(`change`, () => {
       const minpriceChoosen = MIN_PRICE_LIST[typeOfRoom.value];
       price.setAttribute(`min`, minpriceChoosen);
       price.setAttribute(`placeholder`, minpriceChoosen);
 
     });
-    timein.addEventListener(`change`, function () {
+    timein.addEventListener(`change`, () => {
       timeout.value = timein.value;
     });
-    timeout.addEventListener(`change`, function () {
+    timeout.addEventListener(`change`, () => {
       timein.value = timeout.value;
     });
-  }
-  function checkRooms() {
+  };
+  const checkRooms = () => {
     const roomsCapacityElement = document.querySelector(`#capacity`);
     const roomsCountElement = document.querySelector(`#room_number`);
     const roomsCount = Number(roomsCountElement.value);
@@ -75,10 +75,8 @@
       return;
     }
     roomsCapacityElement.setCustomValidity(``);
-  }
-  submitButton.addEventListener(`click`, function () {
-    checkRooms();
-  });
+  };
+  submitButton.addEventListener(`click`, () => checkRooms());
   window.form = {
     show: showForm,
     hide: hideForm,
