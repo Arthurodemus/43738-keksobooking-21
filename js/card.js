@@ -16,9 +16,6 @@
 
   const createCard = (pinsData) => {
     const fragment = document.createDocumentFragment();
-    if (pinsData.offer.photos.length === 0 || pinsData.offer.description === `` || pinsData.offer.address === ``) {
-      return;
-    }
     fragment.appendChild(generateCard(pinsData));
     const mapPins = document.querySelector(`.map__pins`);
     mapPins.appendChild(fragment);
