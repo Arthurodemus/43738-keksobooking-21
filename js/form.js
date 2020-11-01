@@ -76,7 +76,9 @@
     }
     roomsCapacityElement.setCustomValidity(``);
   };
-  submitButton.addEventListener(`click`, () => checkRooms());
+  submitButton.addEventListener(`click`, () => {
+    checkRooms();
+  });
   window.form = {
     show: showForm,
     hide: hideForm,

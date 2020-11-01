@@ -12,10 +12,27 @@
     window.map.pasteDefaultPinAdress();
   };
   const isPageActive = () => !window.map.element.classList.contains(`map--faded`);
+  const onError = (message) => {
+    const errorBlock = document.createElement(`div`);
+    errorBlock.style = `
+    background-color: white;
+    height: 150px;
+    display: flex;
+    top: 150px;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    color: black;
+    font-size: 50px;
+    `;
+    errorBlock.textContent = message;
+    window.map.element.appendChild(errorBlock);
+  };
 
   deactivatePage();
-  window.pins.create(window.data);
-  window.card.create(window.data[0]);
+  window.xhr.load(window.pins.create, onError);
 
   window.map.mainPin.addEventListener(`keydown`, (evt) => {
     if (!isPageActive()) {
