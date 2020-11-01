@@ -15,6 +15,12 @@
   const cardEscHandler = (evt) => window.util.isEscEvent(evt, removeCard);
 
   const createCard = (pinsData) => {
+
+    const fragment = document.createDocumentFragment();
+    fragment.appendChild(generateCard(pinsData));
+    const mapPins = document.querySelector(`.map__pins`);
+    mapPins.appendChild(fragment);
+
     if (pinsData.offer.photos.length === 0) {
       document.querySelector(`.popup__photos`).classList.add(`hidden`);
     }
@@ -24,11 +30,24 @@
     if (pinsData.offer.address === ``) {
       document.querySelector(`.popup__text--address`).classList.add(`hidden`);
     }
-
-    const fragment = document.createDocumentFragment();
-    fragment.appendChild(generateCard(pinsData));
-    const mapPins = document.querySelector(`.map__pins`);
-    mapPins.appendChild(fragment);
+    if (pinsData.offer.price === ``) {
+      document.querySelector(`.popup__text--price`).classList.add(`hidden`);
+    }
+    if (pinsData.offer.features === ``) {
+      document.querySelector(`.popup__features`).classList.add(`hidden`);
+    }
+    if (pinsData.offer.title === ``) {
+      document.querySelector(`.popup__title`).classList.add(`hidden`);
+    }
+    if (pinsData.offer.rooms === `` || pinsData.offer.guests === ``) {
+      document.querySelector(`.popup__text--capacity`).classList.add(`hidden`);
+    }
+    if (pinsData.offer.checkin === `` || pinsData.offer.checkout === ``) {
+      document.querySelector(`.popup__text--time`).classList.add(`hidden`);
+    }
+    if (pinsData.offer.type === ``) {
+      document.querySelector(`.popup__type`).classList.add(`hidden`);
+    }
   };
 
   const generateCard = (cardItem) => {
