@@ -15,6 +15,16 @@
   const cardEscHandler = (evt) => window.util.isEscEvent(evt, removeCard);
 
   const createCard = (pinsData) => {
+    if (pinsData.offer.photos.length === 0) {
+      document.querySelector(`.popup__photos`).classList.add(`hidden`);
+    }
+    if (pinsData.offer.description === ``) {
+      document.querySelector(`.popup__description`).classList.add(`hidden`);
+    }
+    if (pinsData.offer.address === ``) {
+      document.querySelector(`.popup__text--address`).classList.add(`hidden`);
+    }
+
     const fragment = document.createDocumentFragment();
     fragment.appendChild(generateCard(pinsData));
     const mapPins = document.querySelector(`.map__pins`);
