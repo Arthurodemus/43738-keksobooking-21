@@ -18,17 +18,13 @@
   const MIN_Y_LOCATION = 130;
   const MAX_Y_LOCATION = 630;
 
-  function getRandomItem(array) {
-    return array[Math.round(Math.random() * (array.length - 1))];
-  }
-  function getRandomNumber(min, max) {
-    return Math.round(Math.random() * (max - min)) + min;
-  }
-  function getRandomSlice(array) {
+  const getRandomItem = (array) => array[Math.round(Math.random() * (array.length - 1))];
+  const getRandomNumber = (min, max) => Math.round(Math.random() * (max - min)) + min;
+  const getRandomSlice = (array) => {
     const maxCount = array.length - 1;
     return array.slice(0, getRandomNumber(0, maxCount));
-  }
-  function getPinsData(countOfObjects) {
+  };
+  const getPinsData = (countOfObjects) => {
     const pinsData = [];
 
     for (let i = 0; i < countOfObjects; i++) {
@@ -61,7 +57,7 @@
       pinsData.push(pin);
     }
     return pinsData;
-  }
+  };
   window.data = getPinsData(COUNT_OF_PINS);
 
 })();

@@ -2,19 +2,25 @@
 (function () {
   const MAIN_MOUSE_BUTTON = 0;
 
-  function isEnterEvent(evt, action) {
+  const isEnterEvent = (evt, action) => {
     if (evt.key === `Enter`) {
       action();
     }
-  }
-  function isMainMouseClickEvent(evt, action) {
+  };
+  const isEscEvent = (evt, action) => {
+    if (evt.key === `Escape`) {
+      action();
+    }
+  };
+  const isMainMouseClickEvent = (evt, action) => {
     if (evt.button === MAIN_MOUSE_BUTTON) {
       action();
     }
-  }
+  };
   window.util = {
     isEnterEvent,
-    isMainMouseClickEvent
+    isMainMouseClickEvent,
+    isEscEvent
   };
 
 })();
