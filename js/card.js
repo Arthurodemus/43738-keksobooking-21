@@ -15,7 +15,6 @@
   const cardEscHandler = (evt) => window.util.isEscEvent(evt, removeCard);
 
   const createCard = (pinsData) => {
-
     const fragment = document.createDocumentFragment();
     fragment.appendChild(generateCard(pinsData));
     const mapPins = document.querySelector(`.map__pins`);
