@@ -21,11 +21,11 @@
     xhr.timeout = MAX_TIMEOUT;
 
     if (data) {
-      xhr.open('POST', SEND_DATA_URI);
+      xhr.open(`POST`, SEND_DATA_URI);
       xhr.send(data);
     } else {
-    xhr.open(`GET`, REQUEST_URI);
-    xhr.send();
+      xhr.open(`GET`, REQUEST_URI);
+      xhr.send();
     }
 
 
