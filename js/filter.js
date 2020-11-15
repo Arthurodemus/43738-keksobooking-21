@@ -43,16 +43,13 @@
   };
 
   const filterPinsData = (pinsData) => {
-    let filteredPins = [];
-    pinsData.forEach((element) => {
-      if (filterHouses(element.offer.type, housingType) &&
+    let filteredPins = pinsData.filter((element) =>
+      filterHouses(element.offer.type, housingType) &&
         filterHousesPrice(element.offer.price, housingPrice) &&
         filterHouses(element.offer.rooms, housingRooms) &&
         filterHouses(element.offer.guests, housingGuests) &&
-        filterHousesCheckbox(element.offer.features)) {
-        filteredPins.push(element);
-      }
-    });
+        filterHousesCheckbox(element.offer.features)
+    );
 
     if (filteredPins.length > MAX_FILTERED_ADS) {
       filteredPins.slice(MAX_FILTERED_ADS);
