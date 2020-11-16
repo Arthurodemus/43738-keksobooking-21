@@ -3,7 +3,7 @@
 (function () {
   const DEBOUNCE_INTERVAL = 500;
 
-  const debounce = (cb) => {
+  window.debounce = (cb) => {
     let lastTimeout = null;
 
     return (...parameters) => {
@@ -16,7 +16,4 @@
     };
   };
 
-  window.debounce = {
-    debounce
-  };
 })();

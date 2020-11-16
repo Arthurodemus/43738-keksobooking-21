@@ -87,7 +87,7 @@
   adForm.addEventListener(`submit`, submitFormHandler);
   deactivatePage();
 
-  const filterFormChangeHandler = window.debounce.debounce((pinsData) => {
+  const filterFormChangeHandler = window.debounce((pinsData) => {
     removePins();
     window.card.remove();
     window.pins.create(pinsData);
