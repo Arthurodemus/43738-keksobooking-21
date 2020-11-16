@@ -2,6 +2,8 @@
 (function () {
 
   const main = document.querySelector(`main`);
+  const adForm = document.querySelector(`.ad-form`);
+  const mapFilters = document.querySelector(`.map__filters`);
 
   const activatePage = () => {
     window.xhr.load(successHandler, onError);
@@ -82,16 +84,14 @@
     mapFilters.reset();
     deactivatePage();
   };
-  const adForm = document.querySelector(`.ad-form`);
-  const mapFilters = document.querySelector(`.map__filters`);
   adForm.addEventListener(`submit`, submitFormHandler);
   deactivatePage();
 
-  const filterFormChangeHandler = (pinsData) => {
+  const filterFormChangeHandler = window.debounce((pinsData) => {
     removePins();
     window.card.remove();
     window.pins.create(pinsData);
-  };
+  });
   const successHandler = (pinsData) => {
     window.pins.create(pinsData);
 
