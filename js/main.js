@@ -1,6 +1,10 @@
 'use strict';
 (function () {
+
+  const main = document.querySelector(`main`);
+
   const activatePage = () => {
+    window.xhr.load(successHandler, onError);
     window.map.show();
     window.form.show();
     window.form.validate();
@@ -10,6 +14,8 @@
     window.map.hide();
     window.form.hide();
     window.map.pasteDefaultPinAdress();
+    removePins();
+    window.card.remove();
   };
   const isPageActive = () => !window.map.element.classList.contains(`map--faded`);
   const onError = (message) => {
@@ -29,10 +35,71 @@
     `;
     errorBlock.textContent = message;
     window.map.element.appendChild(errorBlock);
+
   };
 
+  const submitSuccessHandler = () => {
+    const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+    const successElement = successTemplate.cloneNode(true);
+
+    main.insertAdjacentElement(`afterbegin`, successElement);
+
+    document.addEventListener(`keydown`, successMessageEscHandler);
+    document.addEventListener(`click`, successMessageClickHandler);
+  };
+
+  const successMessageClose = () => {
+    const successElement = document.querySelector(`.success`);
+    successElement.remove();
+
+    document.removeEventListener(`keydown`, successMessageEscHandler);
+    document.removeEventListener(`click`, successMessageClickHandler);
+  };
+
+  const successMessageClickHandler = () => {
+    successMessageClose();
+  };
+
+  const successMessageEscHandler = (evt) => {
+    if (evt.key === `Escape`) {
+      successMessageClose();
+    }
+  };
+  const removePins = () => {
+    const pins = window.map.element.querySelectorAll(`.map__pin:not(.map__pin--main)`);
+    pins.forEach(function (pin) {
+      pin.remove();
+    });
+  };
+  const reset = document.querySelector(`.ad-form__reset`);
+  reset.addEventListener(`click`, () => {
+    deactivatePage();
+  });
+  const submitFormHandler = (evt) => {
+    evt.preventDefault();
+    window.xhr.load(submitSuccessHandler, onError, new FormData(adForm));
+    adForm.reset();
+    mapFilters.reset();
+    deactivatePage();
+  };
+  const adForm = document.querySelector(`.ad-form`);
+  const mapFilters = document.querySelector(`.map__filters`);
+  adForm.addEventListener(`submit`, submitFormHandler);
   deactivatePage();
-  window.xhr.load(window.pins.create, onError);
+
+  const filterFormChangeHandler = (pinsData) => {
+    removePins();
+    window.card.remove();
+    window.pins.create(pinsData);
+  };
+  const successHandler = (pinsData) => {
+    window.pins.create(pinsData);
+
+    mapFilters.addEventListener(`change`, function () {
+      filterFormChangeHandler(pinsData);
+    });
+  };
+
 
   window.map.mainPin.addEventListener(`keydown`, (evt) => {
     if (!isPageActive()) {

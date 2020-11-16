@@ -2,9 +2,10 @@
 (function () {
 
   const REQUEST_URI = `https://21.javascript.pages.academy/keksobooking/data`;
+  const SEND_DATA_URI = `https://21.javascript.pages.academy/keksobooking`;
   const MAX_TIMEOUT = 10000;
 
-  const load = (onLoad, onError) => {
+  const load = (onLoad, onError, data = null) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
     xhr.addEventListener(`load`, () => xhr.status === 200 ? onLoad(xhr.response) : onError(`Статус ответа:  ${xhr.status} ${xhr.statusText}`)
@@ -18,9 +19,18 @@
     });
 
     xhr.timeout = MAX_TIMEOUT;
-    xhr.open(`GET`, REQUEST_URI);
-    xhr.send();
+
+    if (data) {
+      xhr.open(`POST`, SEND_DATA_URI);
+      xhr.send(data);
+    } else {
+      xhr.open(`GET`, REQUEST_URI);
+      xhr.send();
+    }
+
+
   };
+
 
   window.xhr = {
     load
