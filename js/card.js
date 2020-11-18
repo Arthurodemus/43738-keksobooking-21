@@ -1,6 +1,7 @@
 'use strict';
 (function () {
   const COMPLIANCE_TYPES = {flat: `квартира`, bungalow: `Бунгало`, house: `Дом`, palace: `Дворец`};
+  const templateOrigin = document.querySelector(`#card`).content.querySelector(`.map__card`);
 
   const removeCard = () => {
     const mapCard = window.map.element.querySelector(`.map__card`);
@@ -20,37 +21,36 @@
     const mapPins = document.querySelector(`.map__pins`);
     mapPins.appendChild(fragment);
 
-    if (pinsData.offer.photos.length === 0) {
+    if (!pinsData.offer.photos.length) {
       document.querySelector(`.popup__photos`).classList.add(`hidden`);
     }
-    if (pinsData.offer.description === ``) {
+    if (!pinsData.offer.description) {
       document.querySelector(`.popup__description`).classList.add(`hidden`);
     }
-    if (pinsData.offer.address === ``) {
+    if (!pinsData.offer.address) {
       document.querySelector(`.popup__text--address`).classList.add(`hidden`);
     }
-    if (pinsData.offer.price === ``) {
+    if (!pinsData.offer.price) {
       document.querySelector(`.popup__text--price`).classList.add(`hidden`);
     }
-    if (pinsData.offer.features === ``) {
+    if (!pinsData.offer.features) {
       document.querySelector(`.popup__features`).classList.add(`hidden`);
     }
-    if (pinsData.offer.title === ``) {
+    if (!pinsData.offer.title) {
       document.querySelector(`.popup__title`).classList.add(`hidden`);
     }
-    if (pinsData.offer.rooms === `` || pinsData.offer.guests === ``) {
+    if (!pinsData.offer.rooms || !pinsData.offer.guests) {
       document.querySelector(`.popup__text--capacity`).classList.add(`hidden`);
     }
-    if (pinsData.offer.checkin === `` || pinsData.offer.checkout === ``) {
+    if (!pinsData.offer.checkin || !pinsData.offer.checkout) {
       document.querySelector(`.popup__text--time`).classList.add(`hidden`);
     }
-    if (pinsData.offer.type === ``) {
+    if (!pinsData.offer.type) {
       document.querySelector(`.popup__type`).classList.add(`hidden`);
     }
   };
 
   const generateCard = (cardItem) => {
-    const templateOrigin = document.querySelector(`#card`).content.querySelector(`.map__card`);
     const myTemplate = templateOrigin.cloneNode(true);
     const popupClose = myTemplate.querySelector(`.popup__close`);
     myTemplate.querySelector(`.popup__title`).textContent = cardItem.offer.title;

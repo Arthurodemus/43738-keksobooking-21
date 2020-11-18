@@ -4,7 +4,10 @@
   const main = document.querySelector(`main`);
   const adForm = document.querySelector(`.ad-form`);
   const mapFilters = document.querySelector(`.map__filters`);
+  const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
 
+  let handleFormChange = () => {
+  };
   const activatePage = () => {
     window.xhr.load(successHandler, onError);
     window.map.show();
@@ -16,6 +19,7 @@
     window.map.hide();
     window.form.hide();
     window.map.pasteDefaultPinAdress();
+    window.map.resetMainPin();
     removePins();
     window.card.remove();
   };
@@ -41,7 +45,6 @@
   };
 
   const submitSuccessHandler = () => {
-    const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
     const successElement = successTemplate.cloneNode(true);
 
     main.insertAdjacentElement(`afterbegin`, successElement);
@@ -74,9 +77,12 @@
     });
   };
   const reset = document.querySelector(`.ad-form__reset`);
-  reset.addEventListener(`click`, () => {
+  const resetForm = () => {
+    adForm.reset();
+    mapFilters.reset();
     deactivatePage();
-  });
+  };
+  reset.addEventListener(`click`, resetForm);
   const submitFormHandler = (evt) => {
     evt.preventDefault();
     window.xhr.load(submitSuccessHandler, onError, new FormData(adForm));
@@ -93,11 +99,14 @@
     window.pins.create(pinsData);
   });
   const successHandler = (pinsData) => {
+
+    mapFilters.removeEventListener(`change`, handleFormChange);
     window.pins.create(pinsData);
 
-    mapFilters.addEventListener(`change`, function () {
+    handleFormChange = () => {
       filterFormChangeHandler(pinsData);
-    });
+    };
+    mapFilters.addEventListener(`change`, handleFormChange);
   };
 
 

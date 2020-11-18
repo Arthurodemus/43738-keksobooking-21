@@ -1,7 +1,8 @@
 'use strict';
 
 (function () {
-  const MAX_FILTERED_ADS = 5;
+  const MAX_PINS_DISPLAY = 5;
+  const ANY_VALUE = `any`;
   const housingType = document.querySelector(`#housing-type`);
   const housingPrice = document.querySelector(`#housing-price`);
   const housingRooms = document.querySelector(`#housing-rooms`);
@@ -23,14 +24,14 @@
   };
 
   const filterHouses = (pinsData, filter) => {
-    if (filter.value === `any`) {
+    if (filter.value === ANY_VALUE) {
       return true;
     }
     return pinsData.toString() === filter.value;
   };
 
   const filterHousesPrice = (pinsData, filter) => {
-    if (filter.value === `any`) {
+    if (filter.value === ANY_VALUE) {
       return true;
     }
     return pinsData >= pricePerRoom[filter.value].min && pinsData <= pricePerRoom[filter.value].max;
@@ -43,16 +44,18 @@
   };
 
   const filterPinsData = (pinsData) => {
-    let filteredPins = pinsData.filter((element) =>
-      filterHouses(element.offer.type, housingType) &&
-        filterHousesPrice(element.offer.price, housingPrice) &&
-        filterHouses(element.offer.rooms, housingRooms) &&
-        filterHouses(element.offer.guests, housingGuests) &&
-        filterHousesCheckbox(element.offer.features)
-    );
-
-    if (filteredPins.length > MAX_FILTERED_ADS) {
-      filteredPins.slice(MAX_FILTERED_ADS);
+    let filteredPins = [];
+    for (let i = 0; i < pinsData.length; i++) {
+      if (filterHouses(pinsData[i].offer.type, housingType) &&
+        filterHousesPrice(pinsData[i].offer.price, housingPrice) &&
+        filterHouses(pinsData[i].offer.rooms, housingRooms) &&
+        filterHouses(pinsData[i].offer.guests, housingGuests) &&
+        filterHousesCheckbox(pinsData[i].offer.features)) {
+        filteredPins.push(pinsData[i]);
+      }
+      if (filteredPins.length === MAX_PINS_DISPLAY) {
+        break;
+      }
     }
     return filteredPins;
   };
