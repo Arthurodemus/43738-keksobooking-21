@@ -5,7 +5,10 @@
   const MIN_COORDS_Y = 130;
   const MAX_COORDS_Y = 630;
   const POINTER_HEIGHT = 22;
+  const PIN_MAIN_DEFAULT_X = 570;
+  const PIN_MAIN_DEFAULT_Y = 375;
 
+  const inputAdress = document.querySelector(`#address`);
   const mapPinMain = document.querySelector(`.map__pin--main`);
   const map = document.querySelector(`.map`);
   const getCoordCenterOfBlock = (element) => {
@@ -22,8 +25,13 @@
     const heightCenter = element.offsetTop + blockHeight + POINTER_HEIGHT;
     return {x: widthCenter, y: heightCenter};
   };
+  const resetMainPin = () => {
+    mapPinMain.style.left = `${PIN_MAIN_DEFAULT_X}px`;
+    mapPinMain.style.top = `${PIN_MAIN_DEFAULT_Y}px`;
+    pasteAdress(getCoordCenterOfBlock(mapPinMain));
+  };
+
   const pasteAdress = (pin) => {
-    const inputAdress = document.querySelector(`#address`);
     inputAdress.value = `${Math.round(pin.x)}, ${Math.round(pin.y)}`;
   };
   const showMap = () => {
@@ -95,7 +103,8 @@
     },
     pastePinAdress: () => {
       pasteAdress(getCoordOfPointer(mapPinMain));
-    }
+    },
+    resetMainPin
   };
 
 })();

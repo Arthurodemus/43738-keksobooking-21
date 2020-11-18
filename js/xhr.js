@@ -4,11 +4,12 @@
   const REQUEST_URI = `https://21.javascript.pages.academy/keksobooking/data`;
   const SEND_DATA_URI = `https://21.javascript.pages.academy/keksobooking`;
   const MAX_TIMEOUT = 10000;
+  const STATUS_CODE_OK = 200;
 
   const load = (onLoad, onError, data = null) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = `json`;
-    xhr.addEventListener(`load`, () => xhr.status === 200 ? onLoad(xhr.response) : onError(`Статус ответа:  ${xhr.status} ${xhr.statusText}`)
+    xhr.addEventListener(`load`, () => xhr.status === STATUS_CODE_OK ? onLoad(xhr.response) : onError(`Статус ответа:  ${xhr.status} ${xhr.statusText}`)
     );
 
     xhr.addEventListener(`error`, () => {
